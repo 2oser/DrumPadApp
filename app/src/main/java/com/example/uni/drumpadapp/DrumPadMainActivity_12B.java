@@ -31,6 +31,7 @@ public class DrumPadMainActivity_12B extends AppCompatActivity implements View.O
 
         layoutSpinner = findViewById(R.id.spinner);
         songSpinner = findViewById(R.id.songs);
+
         // adds setOnItemSelectedListener to distinguish between options for further purposes
         if(loadOptions()) {
             layoutSpinner.setOnItemSelectedListener(this);
@@ -68,13 +69,13 @@ public class DrumPadMainActivity_12B extends AppCompatActivity implements View.O
         play.setOnClickListener(this);
         metronome.setOnClickListener(this);
 
+        //method to load sounds
         soundSetUp();
 
     }
 
     /** plays sound based on which button was clicked
      *  plays song
-     *  able to change to a mainActivity with less sound options, if desired
      * */
     @Override
     public void onClick(View v) {
@@ -92,7 +93,7 @@ public class DrumPadMainActivity_12B extends AppCompatActivity implements View.O
             case R.id.b10: sound  = sound10; break;
             case R.id.b11: sound  = sound11; break;
             case R.id.b12: sound  = sound12; break;
-            case R.id.metronome: rythmBot(); break;
+            case R.id.metronome: rhythmBot(); break;
             case R.id.play: playSong(); break;
             default: break;
             }
@@ -104,12 +105,14 @@ public class DrumPadMainActivity_12B extends AppCompatActivity implements View.O
      *  returns true if successful, else false*/
     private boolean loadOptions(){
         try {
+            //sets options for layout
             ArrayAdapter<String> myAdapter = new ArrayAdapter<String>(DrumPadMainActivity_12B.this,
                     R.layout.custom_spinner_item,
                     getResources().getStringArray(R.array.names));
             myAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             layoutSpinner.setAdapter(myAdapter);
 
+            //sets options for songs
             myAdapter = new ArrayAdapter<String>(DrumPadMainActivity_12B.this,
                     R.layout.custom_spinner_item_2,
                     getResources().getStringArray(R.array.songs));
@@ -123,7 +126,7 @@ public class DrumPadMainActivity_12B extends AppCompatActivity implements View.O
 
     /** loops a sound or stop loop
      * */
-    private void rythmBot(){
+    private void rhythmBot(){
         if (on) {
             Toast.makeText(DrumPadMainActivity_12B.this, "Rhythm Bot playing...", Toast.LENGTH_SHORT).show();
             soundPool.play(sound1, 1.0f, 1.0f, 1,-1, 1.35f);
@@ -136,7 +139,7 @@ public class DrumPadMainActivity_12B extends AppCompatActivity implements View.O
         }
     }
 
-    /** plays selected song in a loop
+    /** plays selected song using a MediaPlayer object
      * */
     private void playSong(){
         if (!mediaPlayer.isPlaying()) {
@@ -152,7 +155,7 @@ public class DrumPadMainActivity_12B extends AppCompatActivity implements View.O
         }
     }
 
-    /** creates two streams for playing sounds and for song
+    /** creates a stream for playing sounds and a media player to play song files
      *  loads sounds from raw folder
      * */
     private void soundSetUp(){
@@ -174,7 +177,8 @@ public class DrumPadMainActivity_12B extends AppCompatActivity implements View.O
         song = R.raw.song_despacito;
     }
 
-    /** sets song selection based on selected item from drop down menu
+    /** either sets song selection based on selected item from drop down menu
+     *  or changes the app layout
      * @parent @view @position @id not in use
      * */
     @Override
@@ -182,6 +186,15 @@ public class DrumPadMainActivity_12B extends AppCompatActivity implements View.O
         if(parent.getCount() == 3) {
             switch (position) {
                 case 1: {
+                    if(mediaPlayer.isPlaying()){
+                        mediaPlayer.stop();
+                        mediaPlayer.release();
+                        mediaPlayer = MediaPlayer.create(getApplicationContext(), song);
+                    }
+                    if(!on) {
+                        soundPool.stop(sound1);
+                        on = true;
+                    }
                     Toast.makeText(DrumPadMainActivity_12B.this, "Moving to 9 Buttons Layout...", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getApplicationContext(), DrumPadMainActivity_9B.class));
                     break;
