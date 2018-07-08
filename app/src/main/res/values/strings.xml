@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">DrumPadApp</string>
+    <string name="play">play</string>
+    <string name="metronome">metronome</string>
+    <string name="todo">TODO</string>
+
+    <string-array name="names">
+        <item>Layout</item>
+        <item>9 Buttons</item>
+        <item>12 Buttons</item>
+    </string-array>
+
+    <string-array name="songs">
+        <item> </item>
+        <item>Despacito</item>
+        <item>God_s_Plan</item>
+        <item>Shape_Of_You</item>
+    </string-array>
+
+</resources>
